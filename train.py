@@ -17,6 +17,8 @@ from keras.callbacks import EarlyStopping, Callback
 from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
 
+
+
 import logging
 
 # Helper: Early stopping.
@@ -29,7 +31,7 @@ def get_cifar10_cnn():
     # Set defaults.
     nb_classes = 10  # dataset dependent
     batch_size = 128
-    epochs = 4
+    epochs = 256
 
     # the data, shuffled and split between train and test sets
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
@@ -121,15 +123,23 @@ def compile_model_cnn(genome, nb_classes, input_shape):
     logging.info("Architecture:%s,%s,%s,%d" % (str(nb_neurons), activation, optimizer, nb_layers))
 
     model = Sequential()
-
+    t = True
     # Add each layer.
     for i in range(0, nb_layers):
         # Need input shape for first layer.
-        if i == 0:
-            model.add(Conv2D(nb_neurons[i], kernel_size=(3, 3), activation=activation, padding='same',
+        if not genome.all_possible_genes:
+            if i == 0:
+                model.add(Conv2D(nb_neurons, kernel_size=(3, 3), activation=activation, padding='same',
                              input_shape=input_shape))
+            else:
+                model.add(Conv2D(nb_neurons, kernel_size=(3, 3), activation=activation))
         else:
-            model.add(Conv2D(nb_neurons[i], kernel_size=(3, 3), activation=activation))
+            if i == 0:
+                model.add(Conv2D(nb_neurons[i], kernel_size=(3, 3), activation=activation, padding='same',
+                             input_shape=input_shape))
+            else:
+                model.add(Conv2D(nb_neurons[i], kernel_size=(3, 3), activation=activation))
+
 
         if i < 2:  # otherwise we hit zero
             model.add(MaxPooling2D(pool_size=(2, 2)))
@@ -138,7 +148,12 @@ def compile_model_cnn(genome, nb_classes, input_shape):
 
     model.add(Flatten())
     # always use last nb_neurons value for dense layer
-    model.add(Dense(nb_neurons[len(nb_neurons) - 1], activation=activation))
+  #  model.add(Dense(nb_neurons[len(nb_neurons) - 1], activation=activation))
+
+    if not genome.all_possible_genes:
+        model.add(Dense(128, activation=activation))
+    else:
+        model.add(Dense(nb_neurons[len(nb_neurons)-1], activation=activation))
     model.add(Dropout(0.5))
     model.add(Dense(nb_classes, activation='softmax'))
 

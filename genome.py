@@ -132,16 +132,21 @@ class Genome():
     def print_geneparam(self):
         g = self.geneparam.copy()
         nb_neurons = self.nb_neurons()
-        for i in range(1, 7):
-            g.pop('nb_neurons_' + str(i))
+        if not self.parents == [0,0]:
+            for i in range(1, 7):
+                g.pop('nb_neurons_' + str(i))
         # replace individual layer numbers with single list
-        g['nb_neurons'] = nb_neurons
+            g['nb_neurons'] = nb_neurons
         logging.info(g)
 
     # convert nb_neurons_i at each layer to a single list
     def nb_neurons(self):
         nb_neurons = [None] * 6
-        for i in range(0, 6):
-            nb_neurons[i] = self.geneparam['nb_neurons_' + str(i + 1)]
+
+        if not self.all_possible_genes:
+            nb_neurons = self.geneparam['nb_neurons']
+        else:
+            for i in range(0, 6):
+                nb_neurons[i] = self.geneparam['nb_neurons_' + str(i + 1)]
 
         return nb_neurons
