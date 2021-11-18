@@ -14,7 +14,7 @@ import copy
 from functools import reduce
 from operator import add
 from genome import Genome
-from idgen import IDgen
+from IDgen import IDgen
 from allgenomes import AllGenomes
 
 
