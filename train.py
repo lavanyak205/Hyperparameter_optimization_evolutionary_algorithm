@@ -183,7 +183,7 @@ def train_and_score(genome, dataset):
         dataset (str): Dataset to use for training/evaluating
 
     """
-    logging.info("Getting Keras datasets")
+ #   logging.info("Getting Keras datasets")
 
 
     nb_classes, batch_size, input_shape, x_train, x_test, y_train, y_test, epochs = get_cifar10_cnn()
@@ -191,7 +191,7 @@ def train_and_score(genome, dataset):
    # For MNIST
     #     nb_classes, batch_size, input_shape, x_train, x_test, y_train, y_test, epochs = get_mnist_cnn()
 
-    logging.info("Compling Keras model")
+   # logging.info("Compling Keras model")
 
     model = compile_model_cnn(genome, nb_classes, input_shape)
 

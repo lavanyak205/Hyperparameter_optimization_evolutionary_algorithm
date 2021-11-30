@@ -115,18 +115,18 @@ class Genome():
     def print_genome(self):
         """Print out a genome."""
         self.print_geneparam()
-        logging.info("Acc: %.2f%%" % (self.accuracy * 100))
-        logging.info("UniID: %d" % self.u_ID)
-        logging.info("Mom and Dad: %d %d" % (self.parents[0], self.parents[1]))
-        logging.info("Gen: %d" % self.generation)
-        logging.info("Hash: %s" % self.hash)
+        # logging.info("Acc: %.2f%%" % (self.accuracy * 100))
+        # logging.info("UniID: %d" % self.u_ID)
+        # logging.info("Mom and Dad: %d %d" % (self.parents[0], self.parents[1]))
+        # logging.info("Gen: %d" % self.generation)
+        # logging.info("Hash: %s" % self.hash)
 
     def print_genome_ma(self):
         """Print out a genome."""
         self.print_geneparam()
-        logging.info("Acc: %.2f%% UniID: %d Mom and Dad: %d %d Gen: %d" % (
-        self.accuracy * 100, self.u_ID, self.parents[0], self.parents[1], self.generation))
-        logging.info("Hash: %s" % self.hash)
+        # logging.info("Acc: %.2f%% UniID: %d Mom and Dad: %d %d Gen: %d" % (
+ #       self.accuracy * 100, self.u_ID, self.parents[0], self.parents[1], self.generation))
+        # logging.info("Hash: %s" % self.hash)
 
     # print nb_neurons as single list
     def print_geneparam(self):
@@ -137,7 +137,7 @@ class Genome():
                 g.pop('nb_neurons_' + str(i))
         # replace individual layer numbers with single list
             g['nb_neurons'] = nb_neurons
-        logging.info(g)
+        # logging.info(g)
 
     # convert nb_neurons_i at each layer to a single list
     def nb_neurons(self):

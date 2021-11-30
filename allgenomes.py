@@ -25,7 +25,7 @@ class AllGenomes():
 
         for i in range(0, len(self.population)):
             if (genome.hash == self.population[i].hash):
-                logging.info("add_genome() ERROR: hash clash - duplicate genome")
+       #         logging.info("add_genome() ERROR: hash clash - duplicate genome")
                 return False
 
         self.population.append(genome)
@@ -41,7 +41,7 @@ class AllGenomes():
                 self.population[i].accuracy = genome.accuracy
                 return
 
-        logging.info("set_accuracy() ERROR: Genome not found")
+      #  logging.info("set_accuracy() ERROR: Genome not found")
 
     def is_duplicate(self, genome):
         """Add the genome to our population.

@@ -6,6 +6,8 @@ from tqdm import tqdm
 
 import logging
 
+import matplotlib.pyplot as plt
+
 import sys
 
 # Setup logging.
@@ -25,7 +27,7 @@ def train_genomes(genomes, dataset):
         dataset (str): Dataset to use for training/evaluating
 
     """
-    logging.info("***train_networks(networks, dataset)***")
+   # logging.info("***train_networks(networks, dataset)***")
 
     pbar = tqdm(total=len(genomes))
 
@@ -64,25 +66,25 @@ def generate(generations, population, all_possible_genes, dataset):
         dataset (str): Dataset to use for training/evaluating
 
     """
-    logging.info("***generate(generations, population, all_possible_genes, dataset)***")
+   # logging.info("***generate(generations, population, all_possible_genes, dataset)***")
 
     evolver = Evolver(all_possible_genes)
 
     genomes = evolver.create_population(population)
-
+    accuracy_gen = {}
     # Evolve the generation.
     for i in range(generations):
 
         logging.info("***Now in generation %d of %d***" % (i + 1, generations))
 
-        print_genomes(genomes)
+        #print_genomes(genomes)
 
         # Train and get accuracy for networks/genomes.
         train_genomes(genomes, dataset)
 
         # Get the average accuracy for this generation.
         average_accuracy = get_average_accuracy(genomes)
-
+        accuracy_gen[i + 1] = average_accuracy
         # Print out the average accuracy each generation.
         logging.info("Generation average: %.2f%%" % (average_accuracy * 100))
         logging.info('-' * 80)  # -----------
@@ -100,7 +102,7 @@ def generate(generations, population, all_possible_genes, dataset):
 
     # save_path = saver.save(sess, '/output/model.ckpt')
     # print("Model saved in file: %s" % save_path)
-
+    return accuracy_gen
 
 def print_genomes(genomes):
     """Print a list of genomes.
@@ -109,7 +111,7 @@ def print_genomes(genomes):
         genomes (list): The population of networks/genomes
 
     """
-    logging.info('-' * 80)
+  #  logging.info('-' * 80)
 
     for genome in genomes:
         genome.print_genome()
@@ -129,7 +131,7 @@ def main():
     all_possible_genes = {
         'nb_neurons': [16, 32, 64, 128],
         'nb_layers': [1, 2, 3, 4, 5],
-        'activation': ['relu', 'elu', 'tanh', 'sigmoid', 'hard_sigmoid', 'softplus', 'linear'],
+        'activation': ['relu', 'elu', 'tanh', 'softplus'],
         'optimizer': ['rmsprop', 'adam', 'sgd', 'adagrad', 'adadelta', 'adamax', 'nadam']
     }
 
@@ -144,8 +146,9 @@ def main():
 
     print("***Evolving for %d generations with population size = %d***" % (generations, population))
 
-    generate(generations, population, all_possible_genes, dataset)
-
+    generation_acuracy = generate(generations, population, all_possible_genes, dataset)
+    #Plot the generations vs accuracy
+    plt.plot(generation_acuracy.keys(), generation_acuracy.values(), 'r*')
 
 if __name__ == '__main__':
     main()
