@@ -135,7 +135,7 @@ def print_genomes(genomes):
 
 def main():
     """Evolve a genome."""
-    population = 2 # Number of networks/genomes in each generation.
+    population = 30 # Number of networks/genomes in each generation.
     # we only need to train the new ones....
 
 
@@ -143,21 +143,21 @@ def main():
 
 
     print("***Dataset:", dataset)
-    generations = 1  # Number of times to evolve the population.
+    generations = 8  # Number of times to evolve the population.
     all_possible_genes = {
-        'nb_neurons': [16, 32, 64, 128],
+        'nb_neurons': [16, 32, 64, 128, 256],
         'nb_layers': [1, 3, 4, 5],
-        'nb_batch_size': [32, 64, 128],
+        'nb_batch_size': [64, 128, 256],
         'n_epoch': [128, 256],
         'activation': ['relu', 'elu', 'tanh', 'softplus'],
-        'optimizer': ['rmsprop', 'adam', 'sgd', 'adagrad',]
+        'optimizer': ['rmsprop', 'adam', 'sgd', 'adagrad']
     }
 
 
     # replace nb_neurons with 1 unique value for each layer
     # 6th value reserved for dense layer
     nb_neurons = all_possible_genes['nb_neurons']
-    for i in range(1, 5):
+    for i in range(1, 6):
         all_possible_genes['nb_neurons_' + str(i)] = nb_neurons
     # remove old value from dict
     all_possible_genes.pop('nb_neurons')
@@ -173,6 +173,8 @@ def main():
     print(generation_acuracy)
     #Plot the generations vs accuracy
     plt.plot(generation_acuracy.keys(), generation_acuracy.values(), 'r*')
-    plt.show()
+    plt.xlabel('Generations')
+    plt.ylabel('Fitness/Accuracy')
+    plt.savefig('cifar_fitness.png', bbox_inches='tight')
 if __name__ == '__main__':
     main()
