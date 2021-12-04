@@ -135,7 +135,7 @@ def print_genomes(genomes):
 
 def main():
     """Evolve a genome."""
-    population = 2 # Number of networks/genomes in each generation.
+    population = 30 # Number of networks/genomes in each generation.
     # we only need to train the new ones....
 
 
@@ -143,7 +143,7 @@ def main():
 
 
     print("***Dataset:", dataset)
-    generations = 1  # Number of times to evolve the population.
+    generations = 8  # Number of times to evolve the population.
     all_possible_genes = {
         'nb_neurons': [16, 32, 64, 128],
         'nb_layers': [1, 2, 3, 4, 5],
