@@ -135,7 +135,7 @@ class Genome():
         g = self.geneparam.copy()
         nb_neurons = self.nb_neurons()
         if not self.parents == [0,0]:
-            for i in range(1, 7):
+            for i in range(1, 5):
                 g.pop('nb_neurons_' + str(i))
         # replace individual layer numbers with single list
             g['nb_neurons'] = nb_neurons

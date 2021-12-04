@@ -133,8 +133,7 @@ def compile_model_cnn(genome, nb_classes, input_shape):
                 model.add(Conv2D(nb_neurons, kernel_size=(3, 3), activation=activation))
         else:
             if i == 0:
-                model.add(Conv2D(nb_neurons[i], kernel_size=(3, 3), activation=activation, padding='same',
-                             input_shape=input_shape))
+                model.add(Conv2D(nb_neurons[i], kernel_size=(3, 3), activation=activation, padding='same',input_shape=input_shape))
             else:
                 model.add(Conv2D(nb_neurons[i], kernel_size=(3, 3), activation=activation))
 
