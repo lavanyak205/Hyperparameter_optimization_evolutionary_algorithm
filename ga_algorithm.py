@@ -5,7 +5,7 @@ from evolver import Evolver
 from tqdm import tqdm
 
 import logging
-
+import numpy as np
 import matplotlib.pyplot as plt
 
 import sys
@@ -37,6 +37,9 @@ def train_genomes(genomes, dataset):
 
     pbar.close()
 
+def get_genome_individual(genomes, index):
+    return genomes[index]
+
 
 def get_average_accuracy(genomes):
     """Get the average accuracy for a group of networks/genomes.
@@ -56,7 +59,8 @@ def get_average_accuracy(genomes):
     return total_accuracy / len(genomes)
 
 
-def generate(generations, population, all_possible_genes, dataset):
+#def generate(generations, population, all_possible_genes, dataset, mtDNA = False):
+def generate(generations, population, all_possible_genes, dataset, mtDNA=False):
     """Generate a network with the genetic algorithm.
 
     Args:
@@ -70,7 +74,7 @@ def generate(generations, population, all_possible_genes, dataset):
 
     evolver = Evolver(all_possible_genes)
 
-    genomes = evolver.create_population(population)
+    genomes = evolver.create_population(population, mtDNA)
     accuracy_gen = {}
     # Evolve the generation.
     for i in range(generations):
@@ -81,7 +85,19 @@ def generate(generations, population, all_possible_genes, dataset):
 
         # Train and get accuracy for networks/genomes.
         train_genomes(genomes, dataset)
-
+        if mtDNA:
+        # Pick 2 parents based on fitness values
+            first_parent = get_genome_individual(genomes, 1)
+        # Generate a random number to pick second parent
+            pick_parent = np.random.randint(1, population+1)
+            second_parent = get_genome_individual(genomes, pick_parent)
+        #Check if parents have same mtDNA
+            if(first_parent.mtDNA == second_parent.mtDNA):
+            # Don't allow for cross-over
+                pass
+            else:
+                pass
+                # Allow for cross-over
         # Get the average accuracy for this generation.
         average_accuracy = get_average_accuracy(genomes)
         accuracy_gen[i + 1] = average_accuracy
@@ -119,7 +135,7 @@ def print_genomes(genomes):
 
 def main():
     """Evolve a genome."""
-    population = 30  # Number of networks/genomes in each generation.
+    population = 2 # Number of networks/genomes in each generation.
     # we only need to train the new ones....
 
 
@@ -127,28 +143,36 @@ def main():
 
 
     print("***Dataset:", dataset)
-    generations = 8  # Number of times to evolve the population.
+    generations = 1  # Number of times to evolve the population.
     all_possible_genes = {
         'nb_neurons': [16, 32, 64, 128],
         'nb_layers': [1, 2, 3, 4, 5],
+        'nb_batch_size': [32, 64, 128],
+        'n_epoch': [128, 256],
         'activation': ['relu', 'elu', 'tanh', 'softplus'],
-        'optimizer': ['rmsprop', 'adam', 'sgd', 'adagrad', 'adadelta', 'adamax', 'nadam']
+        'optimizer': ['rmsprop', 'adam', 'sgd', 'adagrad',]
     }
 
 
     # replace nb_neurons with 1 unique value for each layer
     # 6th value reserved for dense layer
     nb_neurons = all_possible_genes['nb_neurons']
-    for i in range(1, 7):
+    for i in range(1, 5):
         all_possible_genes['nb_neurons_' + str(i)] = nb_neurons
     # remove old value from dict
     all_possible_genes.pop('nb_neurons')
 
     print("***Evolving for %d generations with population size = %d***" % (generations, population))
-
+    # if mtDNA is enabled
+    # setmtDNA = False
+    # if setmtDNA:
+    #     generation_acuracy = generate(generations, population, all_possible_genes, dataset,setmtDNA)
+    # else:
     generation_acuracy = generate(generations, population, all_possible_genes, dataset)
+    print('generation accuracy')
+    print(generation_acuracy)
     #Plot the generations vs accuracy
     plt.plot(generation_acuracy.keys(), generation_acuracy.values(), 'r*')
-
+    plt.show()
 if __name__ == '__main__':
     main()

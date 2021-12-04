@@ -4,7 +4,7 @@ import random
 import logging
 import hashlib
 import copy
-
+import uuid
 from train import train_and_score
 
 
@@ -13,7 +13,7 @@ class Genome():
     Represents one genome and all relevant utility functions (add, mutate, etc.).
     """
 
-    def __init__(self, all_possible_genes=None, geneparam={}, u_ID=0, mom_ID=0, dad_ID=0, gen=0):
+    def __init__(self, all_possible_genes=None, geneparam={}, u_ID=0, mom_ID=0, dad_ID=0, gen=0,mtDNA = False):
         """Initialize a genome.
 
         Args:
@@ -26,10 +26,12 @@ class Genome():
         self.accuracy = 0.0
         self.all_possible_genes = all_possible_genes
         self.geneparam = geneparam  # (dict): represents actual genome parameters
-        self.u_ID = u_ID
+
         self.parents = [mom_ID, dad_ID]
         self.generation = gen
-
+        self.u_ID = u_ID
+        if mtDNA:
+            self.mtDNA = uuid.uuid4().hex
         # hash only makes sense when we have specified the genes
         if not geneparam:
             self.hash = 0
@@ -141,12 +143,12 @@ class Genome():
 
     # convert nb_neurons_i at each layer to a single list
     def nb_neurons(self):
-        nb_neurons = [None] * 6
+        nb_neurons = [None] * 4
 
         if not self.all_possible_genes:
             nb_neurons = self.geneparam['nb_neurons']
         else:
-            for i in range(0, 6):
+            for i in range(0, 4):
                 nb_neurons[i] = self.geneparam['nb_neurons_' + str(i + 1)]
 
         return nb_neurons

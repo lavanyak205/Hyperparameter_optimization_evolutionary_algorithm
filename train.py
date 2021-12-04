@@ -17,7 +17,7 @@ from keras.callbacks import EarlyStopping, Callback
 from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
 
-
+import genome
 
 import logging
 
@@ -30,8 +30,6 @@ def get_cifar10_cnn():
     """Retrieve the MNIST dataset and process the data."""
     # Set defaults.
     nb_classes = 10  # dataset dependent
-    batch_size = 128
-    epochs = 256
 
     # the data, shuffled and split between train and test sets
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
@@ -54,7 +52,7 @@ def get_cifar10_cnn():
     x_train /= 255
     x_test /= 255
 
-    return (nb_classes, batch_size, input_shape, x_train, x_test, y_train, y_test, epochs)
+    return (nb_classes, input_shape, x_train, x_test, y_train, y_test)
 
 #
 # def get_mnist_cnn():
@@ -186,13 +184,14 @@ def train_and_score(genome, dataset):
  #   logging.info("Getting Keras datasets")
 
 
-    nb_classes, batch_size, input_shape, x_train, x_test, y_train, y_test, epochs = get_cifar10_cnn()
+    nb_classes, input_shape, x_train, x_test, y_train, y_test = get_cifar10_cnn()
 
    # For MNIST
     #     nb_classes, batch_size, input_shape, x_train, x_test, y_train, y_test, epochs = get_mnist_cnn()
 
    # logging.info("Compling Keras model")
-
+    batch_size = genome.geneparam['nb_batch_size']
+    epochs = genome.geneparam['n_epoch']
     model = compile_model_cnn(genome, nb_classes, input_shape)
 
 

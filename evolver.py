@@ -16,7 +16,7 @@ from operator import add
 from genome import Genome
 from idgen import IDgen
 from allgenomes import AllGenomes
-
+import uuid
 
 class Evolver():
     """Class that implements genetic algorithm."""
@@ -40,10 +40,9 @@ class Evolver():
         self.random_select = random_select
         self.mutate_chance = mutate_chance
 
-        # set the ID gen
         self.ids = IDgen()
 
-    def create_population(self, count):
+    def create_population(self, count,mtDNAStatus):
         """Create a population of random networks.
 
         Args:
@@ -61,7 +60,7 @@ class Evolver():
         while i < count:
 
             # Initialize a new genome.
-            genome = Genome(self.all_possible_genes, {}, self.ids.get_next_ID(), 0, 0, self.ids.get_Gen())
+            genome = Genome(self.all_possible_genes, {}, self.ids.get_next_ID(), 0, 0, self.ids.get_Gen(),mtDNAStatus)
 
             # Set it to random parameters.
             genome.set_genes_random()
