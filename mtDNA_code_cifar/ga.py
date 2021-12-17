@@ -72,7 +72,7 @@ def generate_ea(generations, population, possible_genes, dataset, mtDNA=False):
         accuracy_gen[i + 1] = average_accuracy
         # Print out the average accuracy each generation.
         logging.info("Generation average: %.2f%%" % (average_accuracy * 100))
-        logging.info('-' * 80)  # -----------
+
 
         # Evolve, except on the last iteration.
         if i != generations - 1:
