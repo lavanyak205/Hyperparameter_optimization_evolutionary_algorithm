@@ -1,12 +1,4 @@
-"""
-Generic setup of the data sources and the model training.
 
-Based on:
-    https://github.com/fchollet/keras/blob/master/examples/mnist_mlp.py
-and also on
-    https://github.com/fchollet/keras/blob/master/examples/mnist_cnn.py
-
-"""
 
 # import keras
 from keras.datasets import mnist, cifar10
@@ -20,6 +12,7 @@ from keras import backend as K
 import genome
 
 import logging
+
 
 # Helper: Early stopping.
 early_stopper = EarlyStopping(monitor='val_loss', min_delta=0.1, patience=2, verbose=0, mode='auto')
@@ -38,14 +31,10 @@ def get_cifar10_cnn():
     y_train = to_categorical(y_train, nb_classes)
     y_test = to_categorical(y_test, nb_classes)
 
-    # x._train shape: (50000, 32, 32, 3)
-    # input shape (32, 32, 3)
+
     input_shape = x_train.shape[1:]
 
-    # print('x_train shape:', x_train.shape)
-    # print(x_train.shape[0], 'train samples')
-    # print(x_test.shape[0], 'test samples')
-    # print('input shape', input_shape)
+
 
     x_train = x_train.astype('float32')
     x_test = x_test.astype('float32')
@@ -125,17 +114,12 @@ def compile_model_cnn(genome, nb_classes, input_shape):
     # Add each layer.
     for i in range(0, nb_layers):
         # Need input shape for first layer.
-        if not genome.all_possible_genes:
-            if i == 0:
-                model.add(Conv2D(nb_neurons, kernel_size=(3, 3), activation=activation, padding='same',
-                             input_shape=input_shape))
-            else:
-                model.add(Conv2D(nb_neurons, kernel_size=(3, 3), activation=activation))
+
+
+        if i == 0:
+            model.add(Conv2D(nb_neurons[i], kernel_size=(3, 3), activation=activation, padding='same',input_shape=input_shape))
         else:
-            if i == 0:
-                model.add(Conv2D(nb_neurons[i], kernel_size=(3, 3), activation=activation, padding='same',input_shape=input_shape))
-            else:
-                model.add(Conv2D(nb_neurons[i], kernel_size=(3, 3), activation=activation))
+            model.add(Conv2D(nb_neurons[i], kernel_size=(3, 3), activation=activation))
 
 
         if i < 2:  # otherwise we hit zero
@@ -147,10 +131,8 @@ def compile_model_cnn(genome, nb_classes, input_shape):
     # always use last nb_neurons value for dense layer
   #  model.add(Dense(nb_neurons[len(nb_neurons) - 1], activation=activation))
 
-    if not genome.all_possible_genes:
-        model.add(Dense(128, activation=activation))
-    else:
-        model.add(Dense(nb_neurons[len(nb_neurons)-1], activation=activation))
+
+    model.add(Dense(nb_neurons[len(nb_neurons)-1], activation=activation))
     model.add(Dropout(0.5))
     model.add(Dense(nb_classes, activation='softmax'))
 
@@ -191,6 +173,7 @@ def train_and_score(genome, dataset):
    # logging.info("Compling Keras model")
     batch_size = genome.geneparam['nb_batch_size']
     epochs = genome.geneparam['n_epoch']
+    logging.info("Architecture:%d,%d" % (batch_size,epochs))
     model = compile_model_cnn(genome, nb_classes, input_shape)
 
 
@@ -206,9 +189,9 @@ def train_and_score(genome, dataset):
               callbacks=[early_stopper])
 
     score = model.evaluate(x_test, y_test, verbose=0)
+    logging.info("Test accuracy: %s" % str(score[1]))
 
-    print('Test loss:', score[0])
-    print('Test accuracy:', score[1])
+
 
     K.clear_session()
     # we do not care about keeping any of this in memory -
