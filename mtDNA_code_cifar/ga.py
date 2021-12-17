@@ -98,18 +98,17 @@ def generate_ea(generations, population, possible_genes, dataset, mtDNA=False):
 
 
 def main():
-    population = 3  # Number of initial population
+    population = 30  # Number of initial population
 
     dataset = 'cifar10_cnn'
 
-    generations = 2  # Number of times to evolve the population.
+    generations = 8  # Number of times to evolve the population.
 
     possible_genes = {
         'nb_neurons': [16, 32, 64, 128, 256],
         'nb_layers': [1, 3, 5],
         'nb_batch_size': [64, 128],
-     #   'n_epoch': [128, 256],
-        'n_epoch': [1],
+        'n_epoch': [128, 256],
         'activation': ['relu', 'elu', 'tanh', 'softplus'],
         'optimizer': ['rmsprop', 'adam', 'sgd', 'adagrad']
     }
